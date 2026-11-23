@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nature's Recycling Adventure — Carbon & Nitrogen Cycles</title>
+<style>
+  :root {
+    --bg-dark: #0f172a;
+    --carbon-primary: #10b981;
+    --carbon-dark: #047857;
+    --carbon-light: #d1fae5;
+    --nitrogen-primary: #6366f1;
+    --nitrogen-dark: #4338ca;
+    --nitrogen-light: #e0e7ff;
+    --accent-yellow: #facc15;
+    --accent-orange: #f97316;
+    --text-dark: #1e293b;
+    --text-muted: #475569;
+    --card-bg: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: var(--bg-dark);
+    font-family: 'Segoe UI', 'Trebuchet MS', system-ui, -apple-system, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+    color: var(--text-dark);
+  }
+
+  /* 16:9 Smart TV Stage */
+  #tv-stage {
+    position: relative;
+    width: min(100vw, 177.78vh);
+    height: min(100vh, 56.25vw);
+    background: linear-gradient(180deg, #7dd3fc 0%, #bae6fd 52%, #86efac 52%, #4ade80 72%, #92400e 72%, #78350f 100%);
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    transition: background 0.8s ease;
+  }
+
+  #tv-stage.nitrogen-mode {
+    background: linear-gradient(180deg, #6366f1 0%, #a5b4fc 52%, #86efac 52%, #22c55e 72%, #78350f 72%, #451a03 100%);
+  }
+
+  /* Top Navigation Bar */
+  .top-bar {
+    position: absolute;
+    top: 1.8%;
+    left: 2%;
+    right: 2%;
+    height: 11%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1vw;
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  .top-bar > * {
+    pointer-events: auto;
+  }
+
+  .brand-badge {
+    background: rgba(255, 255, 255, 0.94);
+    padding: 0.55% 1.4%;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 0.6vw;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border: 3px solid #fff;
+    flex-shrink: 0;
+  }
+
+  .brand-badge h1 {
+    font-size: clamp(13px, 1.4vw, 26px);
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  .brand-badge .subtitle {
+    font-size: clamp(10px, 0.85vw, 16px);
+    font-weight: 700;
+    color: var(--carbon-dark);
+    display: block;
+    white-space: nowrap;
+  }
+
+  #tv-stage.nitrogen-mode .brand-badge .subtitle {
+    color: var(--nitrogen-dark);
+  }
+
+  /* Mode Switcher */
+  .mode-switcher {
+    display: flex;
+    background: rgba(15, 23, 42, 0.78);
+    padding: 0.4%;
+    border-radius: 999px;
+    gap: 0.45vw;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(8px);
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    flex-shrink: 0;
+  }
+
+  .mode-btn {
+    border: none;
+    cursor: pointer;
+    padding: 0.65vw 1.4vw;
+    border-radius: 999px;
+    font-size: clamp(12px, 1.15vw, 22px);
+    font-weight: 800;
+    color: #e2e8f0;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.45vw;
+    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .mode-btn:hover {
+    color: #ffffff;
+    transform: scale(1.04);
+  }
+
+  .mode-btn.active-carbon {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+  }
+
+  .mode-btn.active-nitrogen {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.5);
+  }
+
+  /* Right Controls */
+  .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.55vw;
+    flex-shrink: 0;
+  }
+
+  .progress-pill {
+    background: rgba(255, 255, 255, 0.94);
+    padding: 0.55vw 1.1vw;
+    border-radius: 999px;
+    font-size: clamp(11px, 1.05vw, 20px);
+    font-weight: 800;
+    color: #0f172a;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.35vw;
+    white-space: nowrap;
+  }
+
+  .voice-select-wrap {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 999px;
+    padding: 0.35vw 0.7vw;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    gap: 0.3vw;
+  }
+
+  .voice-select {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: clamp(10px, 0.85vw, 15px);
+    font-weight: 700;
+    color: #1e293b;
+    max-width: 9vw;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .icon-btn {
+    border: none;
+    cursor: pointer;
+    width: clamp(32px, 2.9vw, 54px);
+    height: clamp(32px, 2.9vw, 54px);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.94);
+    font-size: clamp(14px, 1.3vw, 24px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  .icon-btn:hover {
+    transform: scale(1.1);
+    background: #fef9c3;
+  }
+
+  .icon-btn.muted {
+    background: #fee2e2;
+    opacity: 0.85;
+  }
+
+  /* Bottom Instruction Banner */
+  .bottom-hint {
+    position: absolute;
+    bottom: 1.8%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.84);
+    color: #fff;
+    padding: 0.55vw 1.6vw;
+    border-radius: 999px;
+    font-size: clamp(11px, 1.1vw, 21px);
+    font-weight: 700;
+    z-index: 15;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    white-space: nowrap;
+  }
+
+  /* SVG Scene */
+  #scene-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+  }
+
+  /* Continuous Living Scene Animations */
+  @keyframes floatSlow {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes driftCloud {
+    0%, 100% { transform: translateX(0px); }
+    50% { transform: translateX(28px); }
+  }
+
+  @keyframes spinSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes sunPulse {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-6px) scale(1.06); }
+  }
+
+  @keyframes plantSway {
+    0%, 100% { transform: rotate(-2.8deg); }
+    50% { transform: rotate(2.8deg); }
+  }
+
+  @keyframes cowWalk {
+    0%   { transform: translate(0px, 0px); }
+    12%  { transform: translate(-12px, -4px); }
+    25%  { transform: translate(-24px, 0px); }
+    37%  { transform: translate(-12px, -4px); }
+    50%  { transform: translate(0px, 0px); }
+    62%  { transform: translate(12px, -4px); }
+    75%  { transform: translate(24px, 0px); }
+    87%  { transform: translate(12px, -4px); }
+    100% { transform: translate(0px, 0px); }
+  }
+
+  @keyframes cowHeadNod {
+    0%, 100% { transform: rotate(0deg) translateY(0px); }
+    45%      { transform: rotate(-6deg) translateY(3px); }
+    55%      { transform: rotate(-6deg) translateY(3px); }
+  }
+
+  @keyframes carDrive {
+    0%   { transform: translate(0px, 0px); }
+    25%  { transform: translate(-55px, -2px); }
+    50%  { transform: translate(-10px, 0px); }
+    75%  { transform: translate(35px, -2px); }
+    100% { transform: translate(0px, 0px); }
+  }
+
+  @keyframes tractorDrive {
+    0%   { transform: translate(0px, 0px); }
+    12%  { transform: translate(14px, -3px); }
+    25%  { transform: translate(28px, 0px); }
+    37%  { transform: translate(42px, -3px); }
+    50%  { transform: translate(52px, 0px); }
+    62%  { transform: translate(38px, -3px); }
+    75%  { transform: translate(24px, 0px); }
+    87%  { transform: translate(10px, -3px); }
+    100% { transform: translate(0px, 0px); }
+  }
+
+  @keyframes wheelSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes microbeWiggle {
+    0%, 100% { transform: translate(0px, 0px) rotate(-3deg); }
+    50% { transform: translate(3px, -4px) rotate(3deg); }
+  }
+
+  @keyframes dashFlow {
+    to { stroke-dashoffset: -48; }
+  }
+
+  @keyframes pulseRing {
+    0% { transform: scale(0.92); opacity: 0.9; }
+    70% { transform: scale(1.18); opacity: 0; }
+    100% { transform: scale(1.18); opacity: 0; }
+  }
+
+  @keyframes smokeRise {
+    0% { transform: translateY(0) scale(0.8); opacity: 0.85; }
+    100% { transform: translateY(-45px) scale(1.5); opacity: 0; }
+  }
+
+  @keyframes flashBolt {
+    0%, 82%, 100% { opacity: 0.25; }
+    85%, 92% { opacity: 1; filter: drop-shadow(0 0 12px #fef08a); }
+  }
+
+  .cloud-drift { animation: driftCloud 12s ease-in-out infinite; }
+  .cloud-drift-2 { animation: driftCloud 16s ease-in-out infinite reverse; }
+
+  .sun-body {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: sunPulse 4.5s ease-in-out infinite;
+  }
+  .sun-rays {
+    transform-origin: 140px 150px;
+    animation: spinSlow 24s linear infinite;
+  }
+
+  .plant-sway {
+    transform-box: fill-box;
+    transform-origin: 50% 95%;
+    animation: plantSway 4.2s ease-in-out infinite;
+  }
+  .plant-sway-legume {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: plantSway 3.6s ease-in-out infinite;
+  }
+
+  .cow-walk {
+    animation: cowWalk 6.5s ease-in-out infinite;
+  }
+  .cow-head-nod {
+    transform-box: fill-box;
+    transform-origin: 85% 65%;
+    animation: cowHeadNod 3.2s ease-in-out infinite;
+  }
+
+  .car-drive {
+    animation: carDrive 6s ease-in-out infinite;
+  }
+  .tractor-drive {
+    animation: tractorDrive 5.8s ease-in-out infinite;
+  }
+  .wheel-spin {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: wheelSpin 1.6s linear infinite;
+  }
+
+  .microbe-wiggle {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: microbeWiggle 2.8s ease-in-out infinite;
+  }
+
+  .flow-path {
+    stroke-dasharray: 14 10;
+    animation: dashFlow 1.4s linear infinite;
+  }
+  .smoke-puff { animation: smokeRise 3.2s ease-out infinite; }
+  .smoke-puff-2 { animation: smokeRise 3.2s ease-out 1.4s infinite; }
+  .lightning-flash { animation: flashBolt 3.5s ease-in-out infinite; }
+
+  /* Clickable Hotspots */
+  .hotspot {
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .hotspot:hover {
+    transform: scale(1.06);
+    filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.28));
+  }
+
+  .hotspot-ring {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pulseRing 2.2s ease-out infinite;
+    pointer-events: none;
+  }
+
+  .station-label {
+    font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+    font-weight: 800;
+    font-size: 19px;
+    fill: #0f172a;
+    text-anchor: middle;
+    pointer-events: none;
+  }
+
+  .cycle-layer {
+    transition: opacity 0.45s ease;
+  }
+
+  .hidden-layer {
+    opacity: 0;
+    pointer-events: none;
+    display: none;
+  }
+
+  /* Popup Modal Overlay */
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.74);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal-card {
+    width: 86%;
+    height: 82%;
+    background: #ffffff;
+    border-radius: 26px;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.92);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 6px solid var(--carbon-primary);
+  }
+
+  #tv-stage.nitrogen-mode .modal-card {
+    border-color: var(--nitrogen-primary);
+  }
+
+  .modal-overlay.open .modal-card {
+    transform: scale(1);
+  }
+
+  .modal-header {
+    padding: 1.1vw 2vw;
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid #a7f3d0;
+    flex-shrink: 0;
+  }
+
+  #tv-stage.nitrogen-mode .modal-header {
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+    border-bottom-color: #c7d2fe;
+  }
+
+  .modal-title-group {
+    display: flex;
+    align-items: center;
+    gap: 0.8vw;
+    min-width: 0;
+  }
+
+  .modal-emoji {
+    font-size: clamp(22px, 2.4vw, 44px);
+    flex-shrink: 0;
+  }
+
+  .modal-title {
+    font-size: clamp(16px, 1.85vw, 34px);
+    font-weight: 900;
+    color: #0f172a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .slide-dots {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    flex-shrink: 0;
+  }
+
+  .dot {
+    width: clamp(9px, 0.9vw, 16px);
+    height: clamp(9px, 0.9vw, 16px);
+    border-radius: 50%;
+    background: #cbd5e1;
+    transition: all 0.3s ease;
+  }
+
+  .dot.active {
+    width: clamp(22px, 2.2vw, 38px);
+    border-radius: 999px;
+    background: var(--carbon-primary);
+  }
+
+  #tv-stage.nitrogen-mode .dot.active {
+    background: var(--nitrogen-primary);
+  }
+
+  .close-btn {
+    border: none;
+    cursor: pointer;
+    width: clamp(32px, 2.9vw, 52px);
+    height: clamp(32px, 2.9vw, 52px);
+    border-radius: 50%;
+    background: #ffffff;
+    font-size: clamp(16px, 1.4vw, 26px);
+    font-weight: 900;
+    color: #ef4444;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .close-btn:hover {
+    transform: scale(1.12) rotate(90deg);
+  }
+
+  /* Modal Body */
+  .modal-body {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1.05fr 1.15fr;
+    gap: 1.8vw;
+    padding: 1.6vw 2.2vw;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .slide-graphic-box {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+    border-radius: 20px;
+    border: 3px dashed #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide-graphic-box svg {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+  }
+
+  .slide-text-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.95vw;
+    max-height: 100%;
+    overflow-y: auto;
+    padding-right: 0.3vw;
+  }
+
+  .slide-badge {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 0.35vw 1vw;
+    border-radius: 999px;
+    font-size: clamp(11px, 0.95vw, 18px);
+    font-weight: 800;
+    background: #fef3c7;
+    color: #b45309;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .slide-heading {
+    font-size: clamp(18px, 1.9vw, 35px);
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1.2;
+  }
+
+  .slide-desc {
+    font-size: clamp(14px, 1.38vw, 25px);
+    line-height: 1.5;
+    color: #334155;
+    font-weight: 600;
+  }
+
+  .audio-replay-btn {
+    align-self: flex-start;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #ffffff;
+    padding: 0.6vw 1.3vw;
+    border-radius: 999px;
+    font-size: clamp(12px, 1.1vw, 20px);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+    transition: transform 0.2s ease;
+  }
+
+  .audio-replay-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .audio-replay-btn.speaking {
+    background: linear-gradient(135deg, #10b981, #059669);
+    animation: floatSlow 1s ease-in-out infinite;
+  }
+
+  /* Quiz Choices */
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8vw;
+    margin-top: 0.2vw;
+  }
+
+  .quiz-btn {
+    border: 4px solid #cbd5e1;
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 0.85vw 1.25vw;
+    text-align: left;
+    cursor: pointer;
+    font-size: clamp(13px, 1.25vw, 23px);
+    font-weight: 800;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.9vw;
+    line-height: 1.3;
+    transition: all 0.25s ease;
+  }
+
+  .quiz-btn:hover:not(:disabled) {
+    border-color: #38bdf8;
+    background: #f0f9ff;
+    transform: translateX(6px);
+  }
+
+  .quiz-letter {
+    width: clamp(26px, 2.3vw, 42px);
+    height: clamp(26px, 2.3vw, 42px);
+    border-radius: 50%;
+    background: #0f172a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: clamp(13px, 1.2vw, 22px);
+  }
+
+  .quiz-btn.correct {
+    border-color: #10b981;
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .quiz-btn.correct .quiz-letter {
+    background: #10b981;
+  }
+
+  .quiz-btn.wrong {
+    border-color: #ef4444;
+    background: #fee2e2;
+    color: #991b1b;
+    animation: shake 0.4s ease;
+  }
+
+  .quiz-btn.wrong .quiz-letter {
+    background: #ef4444;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  .quiz-feedback {
+    padding: 0.75vw 1.15vw;
+    border-radius: 14px;
+    font-size: clamp(12px, 1.12vw, 21px);
+    font-weight: 800;
+    line-height: 1.35;
+    display: none;
+  }
+
+  .quiz-feedback.show-correct {
+    display: block;
+    background: #dcfce7;
+    color: #166534;
+    border: 2px solid #4ade80;
+  }
+
+  .quiz-feedback.show-wrong {
+    display: block;
+    background: #fef2f2;
+    color: #991b1b;
+    border: 2px solid #f87171;
+  }
+
+  /* Modal Footer */
+  .modal-footer {
+    padding: 1vw 2.2vw;
+    background: #f8fafc;
+    border-top: 2px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .nav-btn {
+    border: none;
+    cursor: pointer;
+    padding: 0.7vw 1.8vw;
+    border-radius: 999px;
+    font-size: clamp(13px, 1.2vw, 22px);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .btn-prev {
+    background: #e2e8f0;
+    color: #334155;
+  }
+
+  .btn-next {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+  }
+
+  #tv-stage.nitrogen-mode .btn-next {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+  }
+
+  .slide-counter {
+    font-size: clamp(12px, 1.1vw, 20px);
+    font-weight: 800;
+    color: #64748b;
+  }
+
+  /* Confetti Canvas */
+  #confetti-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    overflow: hidden;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    animation: confettiFall 1.8s ease-out forwards;
+  }
+
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(600px) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="tv-stage">
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="brand-badge">
+      <span style="font-size: clamp(18px, 2vw, 36px);">🌍</span>
+      <div>
+        <h1>Nature's Recycling Adventure</h1>
+        <span class="subtitle" id="mode-subtitle">Carbon Cycle Explorer (CO₂)</span>
+      </div>
+    </div>
+
+    <div class="mode-switcher" role="tablist" aria-label="Cycle Mode Switcher">
+      <button class="mode-btn active-carbon" id="btn-carbon" onclick="setMode('carbon')">
+        🌿 Carbon Cycle
+      </button>
+      <button class="mode-btn" id="btn-nitrogen" onclick="setMode('nitrogen')">
+        ⚡ Nitrogen Cycle
+      </button>
+    </div>
+
+    <div class="right-controls">
+      <div class="progress-pill" id="progress-pill">⭐ 0 / 5 Stars</div>
+      <div class="voice-select-wrap" title="Choose Narrator Voice">
+        <span style="font-size: clamp(12px, 1.1vw, 20px);">🗣️</span>
+        <select id="voice-select" class="voice-select" onchange="onVoiceChange()" aria-label="Narrator Voice">
+          <option value="">Auto Voice</option>
+        </select>
+      </div>
+      <button class="icon-btn" id="btn-audio" title="Toggle Voice Narration" onclick="toggleAudio()">🔊</button>
+      <button class="icon-btn" id="btn-reset" title="Reset Stars for Next Student" onclick="resetProgress()">🔄</button>
+      <button class="icon-btn" id="btn-fullscreen" title="Toggle Fullscreen" onclick="toggleFullscreen()">⛶</button>
+    </div>
+  </header>
+
+  <!-- Interactive 16:9 Landscape SVG (1600 x 900 coordinate system) -->
+  <svg id="scene-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <marker id="arrow-carbon" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#059669" />
+      </marker>
+      <marker id="arrow-carbon-red" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#ea580c" />
+      </marker>
+      <marker id="arrow-nitrogen" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#4f46e5" />
+      </marker>
+      <marker id="arrow-nitrogen-gold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97706" />
+      </marker>
+      <linearGradient id="pond-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#38bdf8" />
+        <stop offset="100%" stop-color="#0284c7" />
+      </linearGradient>
+    </defs>
+
+    <!-- Background Landscape: Distant Hills -->
+    <path d="M 0 510 Q 300 410 620 490 T 1240 470 T 1600 500 L 1600 660 L 0 660 Z" fill="#4ade80" opacity="0.65" />
+    <!-- Foreground Meadow -->
+    <path d="M 0 540 Q 450 500 900 545 T 1600 530 L 1600 680 L 0 680 Z" fill="#22c55e" />
+    <!-- Soil Underground Cross-Section -->
+    <rect x="0" y="655" width="1600" height="245" fill="#78350f" />
+    <path d="M 0 655 Q 200 640 400 658 T 800 652 T 1200 660 T 1600 650 L 1600 685 L 0 685 Z" fill="#92400e" />
+    <!-- Soil pebbles -->
+    <ellipse cx="180" cy="750" rx="18" ry="9" fill="#5c280a" opacity="0.5" />
+    <ellipse cx="520" cy="790" rx="24" ry="11" fill="#5c280a" opacity="0.5" />
+    <ellipse cx="1050" cy="740" rx="20" ry="9" fill="#5c280a" opacity="0.5" />
+    <ellipse cx="1420" cy="780" rx="28" ry="12" fill="#5c280a" opacity="0.5" />
+
+    <!-- Decorative Pond -->
+    <ellipse cx="1460" cy="615" rx="160" ry="38" fill="url(#pond-grad)" stroke="#bae6fd" stroke-width="4" />
+
+    <!-- Animated Sun (gently bobs/pulses while rays spin) -->
+    <g id="bg-sun" class="sun-body">
+      <g class="sun-rays" stroke="#fde047" stroke-width="7" stroke-linecap="round">
+        <line x1="140" y1="80" x2="140" y2="55" />
+        <line x1="140" y1="220" x2="140" y2="245" />
+        <line x1="70" y1="150" x2="45" y2="150" />
+        <line x1="210" y1="150" x2="235" y2="150" />
+        <line x1="90" y1="100" x2="72" y2="82" />
+        <line x1="190" y1="200" x2="208" y2="218" />
+        <line x1="190" y1="100" x2="208" y2="82" />
+        <line x1="90" y1="200" x2="72" y2="218" />
+      </g>
+      <circle cx="140" cy="150" r="52" fill="#facc15" stroke="#fef08a" stroke-width="6" />
+      <circle cx="124" cy="143" r="4.5" fill="#713f12" />
+      <circle cx="156" cy="143" r="4.5" fill="#713f12" />
+      <path d="M 127 160 Q 140 172 153 160" fill="none" stroke="#713f12" stroke-width="4" stroke-linecap="round" />
+    </g>
+
+    <!-- Drifting Background Clouds -->
+    <g class="cloud-drift" opacity="0.85">
+      <path d="M 290 205 Q 290 175 320 175 Q 332 150 365 155 Q 395 150 408 175 Q 435 178 432 205 Z" fill="#ffffff" />
+    </g>
+    <g class="cloud-drift-2" opacity="0.8">
+      <path d="M 1180 185 Q 1180 155 1210 155 Q 1225 130 1260 138 Q 1290 132 1305 158 Q 1335 162 1330 185 Z" fill="#ffffff" />
+    </g>
+
+    <!-- ========================================================= -->
+    <!-- CARBON CYCLE LAYER                                        -->
+    <!-- ========================================================= -->
+    <g id="carbon-layer" class="cycle-layer">
+      <!-- Animated Cycle Arrows -->
+      <path d="M 670 230 Q 430 230 330 360" fill="none" stroke="#059669" stroke-width="7" class="flow-path" marker-end="url(#arrow-carbon)" />
+      <path d="M 410 530 Q 540 500 660 535" fill="none" stroke="#059669" stroke-width="7" class="flow-path" marker-end="url(#arrow-carbon)" />
+      <path d="M 790 470 Q 810 350 790 275" fill="none" stroke="#ea580c" stroke-width="7" class="flow-path" marker-end="url(#arrow-carbon-red)" />
+      <path d="M 540 690 Q 590 470 710 275" fill="none" stroke="#ea580c" stroke-width="6" class="flow-path" marker-end="url(#arrow-carbon-red)" />
+      <path d="M 1240 370 Q 1120 220 930 205" fill="none" stroke="#ea580c" stroke-width="8" class="flow-path" marker-end="url(#arrow-carbon-red)" />
+
+      <!-- Flow Pill Labels -->
+      <g transform="translate(465, 258)">
+        <rect x="-86" y="-18" width="172" height="34" rx="17" fill="#d1fae5" stroke="#059669" stroke-width="2.5" />
+        <text x="0" y="5" text-anchor="middle" font-weight="800" font-size="16" fill="#065f46">Photosynthesis</text>
+      </g>
+      <g transform="translate(830, 365)">
+        <rect x="-76" y="-17" width="152" height="32" rx="16" fill="#ffedd5" stroke="#ea580c" stroke-width="2.5" />
+        <text x="0" y="5" text-anchor="middle" font-weight="800" font-size="16" fill="#9a3412">Breathing CO₂</text>
+      </g>
+      <g transform="translate(1110, 260)">
+        <rect x="-80" y="-17" width="160" height="32" rx="16" fill="#ffedd5" stroke="#ea580c" stroke-width="2.5" />
+        <text x="0" y="5" text-anchor="middle" font-weight="800" font-size="16" fill="#9a3412">Burning Fuels</text>
+      </g>
+
+      <!-- STATION C1: Atmosphere CO2 -->
+      <g class="hotspot" id="hs-c-air" onclick="openStation('carbon', 'c-air')">
+        <circle cx="790" cy="200" r="82" fill="none" stroke="#ffffff" stroke-width="5" class="hotspot-ring" />
+        <path d="M 695 230 Q 685 185 730 180 Q 750 135 805 145 Q 855 135 875 180 Q 915 185 905 230 Z" fill="#ffffff" stroke="#38bdf8" stroke-width="5" />
+        <text x="795" y="198" text-anchor="middle" font-size="34" font-weight="900" fill="#0284c7">CO₂</text>
+        <rect x="695" y="238" width="200" height="44" rx="22" fill="#ffffff" stroke="#0284c7" stroke-width="3" />
+        <text x="795" y="266" class="station-label">☁️ Air (CO₂)</text>
+        <text x="875" y="158" font-size="32" id="star-c-air" opacity="0">⭐</text>
+      </g>
+
+      <!-- STATION C2: Green Tree (gently sways in the breeze) -->
+      <g class="hotspot" id="hs-c-tree" onclick="openStation('carbon', 'c-tree')">
+        <circle cx="270" cy="480" r="95" fill="none" stroke="#fef08a" stroke-width="5" class="hotspot-ring" />
+        <rect x="245" y="485" width="48" height="150" rx="10" fill="#92400e" />
+        <g class="plant-sway">
+          <path d="M 255 545 L 215 510 M 285 530 L 325 495" stroke="#92400e" stroke-width="14" stroke-linecap="round" />
+          <circle cx="270" cy="415" r="78" fill="#16a34a" />
+          <circle cx="210" cy="455" r="58" fill="#22c55e" />
+          <circle cx="330" cy="455" r="58" fill="#22c55e" />
+          <circle cx="270" cy="455" r="65" fill="#4ade80" />
+          <circle cx="235" cy="435" r="10" fill="#ef4444" />
+          <circle cx="305" cy="425" r="10" fill="#ef4444" />
+          <circle cx="270" cy="475" r="10" fill="#ef4444" />
+        </g>
+        <rect x="155" y="618" width="230" height="44" rx="22" fill="#ffffff" stroke="#16a34a" stroke-width="3" />
+        <text x="270" y="646" class="station-label">🌳 Green Plants</text>
+        <text x="340" y="370" font-size="34" id="star-c-tree" opacity="0">⭐</text>
+      </g>
+
+      <!-- STATION C3: Cow (Animals - continuously walking & nodding with clear horns) -->
+      <g class="hotspot" id="hs-c-cow" onclick="openStation('carbon', 'c-cow')">
+        <circle cx="770" cy="545" r="82" fill="none" stroke="#ffffff" stroke-width="5" class="hotspot-ring" />
+        <g class="cow-walk">
+          <!-- Tail -->
+          <path d="M 822 532 Q 842 544 836 564" fill="none" stroke="#1e293b" stroke-width="4" stroke-linecap="round" />
+          <circle cx="836" cy="566" r="5" fill="#1e293b" />
+          <!-- Body & Legs -->
+          <rect x="705" y="515" width="120" height="72" rx="28" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <ellipse cx="745" cy="542" rx="18" ry="13" fill="#1e293b" />
+          <ellipse cx="792" cy="560" rx="15" ry="11" fill="#1e293b" />
+          <rect x="718" y="580" width="14" height="42" rx="6" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <rect x="748" y="580" width="14" height="42" rx="6" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <rect x="785" y="580" width="14" height="42" rx="6" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <rect x="808" y="580" width="14" height="42" rx="6" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <!-- Head, Ears & Clearly Visible Horns -->
+          <g class="cow-head-nod">
+            <!-- Ears -->
+            <ellipse cx="654" cy="506" rx="12" ry="7" transform="rotate(-22 654 506)" fill="#ffffff" stroke="#1e293b" stroke-width="3.5" />
+            <ellipse cx="728" cy="506" rx="12" ry="7" transform="rotate(22 728 506)" fill="#ffffff" stroke="#1e293b" stroke-width="3.5" />
+            <!-- Head -->
+            <rect x="658" y="492" width="66" height="58" rx="20" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+            <!-- Horns (bold closed paths on top of head) -->
+            <path d="M 668 496 Q 650 478 665 464 Q 674 476 681 493 Z" fill="#fde68a" stroke="#1e293b" stroke-width="3.5" stroke-linejoin="round" />
+            <path d="M 714 496 Q 732 478 717 464 Q 708 476 701 493 Z" fill="#fde68a" stroke="#1e293b" stroke-width="3.5" stroke-linejoin="round" />
+            <!-- Snout & Eyes -->
+            <rect x="656" y="524" width="68" height="28" rx="14" fill="#fbcfe8" stroke="#1e293b" stroke-width="3" />
+            <circle cx="678" cy="538" r="3" fill="#be185d" />
+            <circle cx="702" cy="538" r="3" fill="#be185d" />
+            <circle cx="678" cy="512" r="5" fill="#1e293b" />
+            <circle cx="704" cy="512" r="5" fill="#1e293b" />
+          </g>
+        </g>
+        <rect x="670" y="625" width="200" height="44" rx="22" fill="#ffffff" stroke="#f97316" stroke-width="3" />
+        <text x="770" y="653" class="station-label">🐄 Animals</text>
+        <text x="835" y="495" font-size="34" id="star-c-cow" opacity="0">⭐</text>
+      </g>
+
+      <!-- STATION C4: Decomposers (Mushrooms & Soil) -->
+      <g class="hotspot" id="hs-c-decomposer" onclick="openStation('carbon', 'c-decomposer')">
+        <circle cx="510" cy="735" r="76" fill="none" stroke="#fde047" stroke-width="5" class="hotspot-ring" />
+        <rect x="468" y="705" width="24" height="46" rx="8" fill="#fef3c7" stroke="#78350f" stroke-width="3" />
+        <path d="M 442 710 Q 480 658 518 710 Z" fill="#ef4444" stroke="#78350f" stroke-width="3" />
+        <circle cx="468" cy="692" r="6" fill="#ffffff" />
+        <circle cx="492" cy="696" r="5" fill="#ffffff" />
+        <rect x="526" y="718" width="20" height="36" rx="7" fill="#fef3c7" stroke="#78350f" stroke-width="3" />
+        <path d="M 506 722 Q 536 680 566 722 Z" fill="#f97316" stroke="#78350f" stroke-width="3" />
+        <circle cx="536" cy="706" r="5" fill="#ffffff" />
+        <path d="M 445 775 Q 465 760 485 775 T 525 775" fill="none" stroke="#f472b6" stroke-width="10" stroke-linecap="round" />
+        <rect x="390" y="782" width="240" height="44" rx="22" fill="#ffffff" stroke="#b45309" stroke-width="3" />
+        <text x="510" y="810" class="station-label">🍄 Decomposers</text>
+        <text x="565" y="688" font-size="32" id="star-c-decomposer" opacity="0">⭐</text>
+      </g>
+
+      <!-- STATION C5: Human Activities (Factory & Moving Car) -->
+      <g class="hotspot" id="hs-c-human" onclick="openStation('carbon', 'c-human')">
+        <circle cx="1235" cy="515" r="95" fill="none" stroke="#fed7aa" stroke-width="5" class="hotspot-ring" />
+        <circle cx="1185" cy="390" r="18" fill="#cbd5e1" class="smoke-puff" />
+        <circle cx="1235" cy="380" r="22" fill="#94a3b8" class="smoke-puff-2" />
+        <rect x="1170" y="405" width="30" height="80" fill="#64748b" stroke="#1e293b" stroke-width="3" />
+        <rect x="1220" y="390" width="32" height="95" fill="#475569" stroke="#1e293b" stroke-width="3" />
+        <path d="M 1140 585 L 1140 485 L 1200 460 L 1200 485 L 1260 460 L 1260 485 L 1320 485 L 1320 585 Z" fill="#94a3b8" stroke="#1e293b" stroke-width="4" />
+        <rect x="1162" y="510" width="28" height="28" fill="#fef08a" stroke="#1e293b" stroke-width="3" />
+        <rect x="1212" y="510" width="28" height="28" fill="#fef08a" stroke="#1e293b" stroke-width="3" />
+        <rect x="1262" y="510" width="28" height="28" fill="#fef08a" stroke="#1e293b" stroke-width="3" />
+        <!-- Moving Red Car with Spinning Wheels -->
+        <g class="car-drive">
+          <rect x="1255" y="575" width="95" height="32" rx="10" fill="#ef4444" stroke="#1e293b" stroke-width="3" />
+          <path d="M 1272 575 L 1285 552 L 1322 552 L 1335 575 Z" fill="#bae6fd" stroke="#1e293b" stroke-width="3" />
+          <g class="wheel-spin">
+            <circle cx="1278" cy="608" r="12" fill="#1e293b" />
+            <circle cx="1278" cy="608" r="5" fill="#e2e8f0" />
+            <line x1="1278" y1="600" x2="1278" y2="616" stroke="#94a3b8" stroke-width="2" />
+            <line x1="1270" y1="608" x2="1286" y2="608" stroke="#94a3b8" stroke-width="2" />
+          </g>
+          <g class="wheel-spin">
+            <circle cx="1328" cy="608" r="12" fill="#1e293b" />
+            <circle cx="1328" cy="608" r="5" fill="#e2e8f0" />
+            <line x1="1328" y1="600" x2="1328" y2="616" stroke="#94a3b8" stroke-width="2" />
+            <line x1="1320" y1="608" x2="1336" y2="608" stroke="#94a3b8" stroke-width="2" />
+          </g>
+        </g>
+        <rect x="1115" y="625" width="250" height="44" rx="22" fill="#ffffff" stroke="#ef4444" stroke-width="3" />
+        <text x="1240" y="653" class="station-label">🏭 Human Activity</text>
+        <text x="1315" y="455" font-size="34" id="star-c-human" opacity="0">⭐</text>
+      </g>
+    </g>
+
+    <!-- ========================================================= -->
+    <!-- NITROGEN CYCLE LAYER                                      -->
+    <!-- ========================================================= -->
+    <g id="nitrogen-layer" class="cycle-layer hidden-layer">
+      <!-- Animated Cycle Arrows -->
+      <path d="M 730 275 Q 670 460 720 680" fill="none" stroke="#d97706" stroke-width="7" class="flow-path" marker-end="url(#arrow-nitrogen-gold)" />
+      <path d="M 670 230 Q 430 250 320 430" fill="none" stroke="#4f46e5" stroke-width="7" class="flow-path" marker-end="url(#arrow-nitrogen)" />
+      <path d="M 670 735 Q 500 740 375 710" fill="none" stroke="#4f46e5" stroke-width="7" class="flow-path" marker-end="url(#arrow-nitrogen)" />
+      <path d="M 410 560 Q 620 510 810 545" fill="none" stroke="#4f46e5" stroke-width="7" class="flow-path" marker-end="url(#arrow-nitrogen)" />
+      <path d="M 885 620 Q 860 695 820 715" fill="none" stroke="#d97706" stroke-width="6" class="flow-path" marker-end="url(#arrow-nitrogen-gold)" />
+      <path d="M 790 675 Q 890 460 855 275" fill="none" stroke="#4f46e5" stroke-width="7" class="flow-path" marker-end="url(#arrow-nitrogen)" />
+      <path d="M 1180 620 Q 1040 720 845 735" fill="none" stroke="#d97706" stroke-width="7" class="flow-path" marker-end="url(#arrow-nitrogen-gold)" />
+
+      <!-- Flow Labels -->
+      <g transform="translate(470, 290)">
+        <rect x="-86" y="-17" width="172" height="32" rx="16" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2.5" />
+        <text x="0" y="5" text-anchor="middle" font-weight="800" font-size="16" fill="#312e81">Nitrogen Fixation</text>
+      </g>
+      <g transform="translate(925, 410)">
+        <rect x="-80" y="-17" width="160" height="32" rx="16" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2.5" />
+        <text x="0" y="5" text-anchor="middle" font-weight="800" font-size="16" fill="#312e81">Back to Air (N₂)</text>
+      </g>
+
+      <!-- STATION N1: Atmosphere & Lightning (N2) -->
+      <g class="hotspot" id="hs-n-air" onclick="openStation('nitrogen', 'n-air')">
+        <circle cx="790" cy="200" r="88" fill="none" stroke="#fde047" stroke-width="5" class="hotspot-ring" />
+        <path d="M 685 225 Q 675 180 725 175 Q 748 130 805 140 Q 860 130 880 175 Q 925 180 915 225 Z" fill="#475569" stroke="#e0e7ff" stroke-width="5" />
+        <text x="795" y="196" text-anchor="middle" font-size="34" font-weight="900" fill="#fde047">N₂ (78%)</text>
+        <polygon points="785,222 762,272 786,272 770,322 818,260 792,260 808,222" fill="#facc15" stroke="#ffffff" stroke-width="2" class="lightning-flash" />
+        <rect x="675" y="236" width="240" height="44" rx="22" fill="#ffffff" stroke="#4f46e5" stroke-width="3" />
+        <text x="795" y="264" class="station-label">⚡ Sky &amp; Lightning</text>
+        <text x="890" y="155" font-size="32" id="star-n-air" opacity="0">⭐</text>
+      </g>
+
+      <!-- STATION N2: Legume Plant & Root Nodules (above-ground plant gently sways) -->
+      <g class="hotspot" id="hs-n-legume" onclick="openStation('nitrogen', 'n-legume')">
+        <circle cx="290" cy="590" r="95" fill="none" stroke="#a5b4fc" stroke-width="5" class="hotspot-ring" />
+        <!-- Gently Swaying Stem & Leaves -->
+        <g class="plant-sway-legume">
+          <path d="M 290 655 L 290 480" stroke="#15803d" stroke-width="12" stroke-linecap="round" />
+          <ellipse cx="245" cy="545" rx="42" ry="22" transform="rotate(-25 245 545)" fill="#22c55e" stroke="#14532d" stroke-width="3" />
+          <ellipse cx="335" cy="530" rx="42" ry="22" transform="rotate(25 335 530)" fill="#22c55e" stroke="#14532d" stroke-width="3" />
+          <ellipse cx="255" cy="485" rx="34" ry="18" transform="rotate(-20 255 485)" fill="#4ade80" stroke="#14532d" stroke-width="3" />
+          <ellipse cx="325" cy="475" rx="34" ry="18" transform="rotate(20 325 475)" fill="#4ade80" stroke="#14532d" stroke-width="3" />
+          <path d="M 315 565 Q 355 570 365 605 Q 325 605 315 565 Z" fill="#84cc16" stroke="#3f6212" stroke-width="3" />
+        </g>
+        <!-- Anchored Underground Roots & Nodules -->
+        <path d="M 290 655 Q 250 700 225 735 M 290 655 L 290 745 M 290 655 Q 330 700 355 735" fill="none" stroke="#fde68a" stroke-width="7" stroke-linecap="round" />
+        <circle cx="245" cy="705" r="11" fill="#facc15" stroke="#b45309" stroke-width="3" />
+        <circle cx="290" cy="720" r="12" fill="#facc15" stroke="#b45309" stroke-width="3" />
+        <circle cx="335" cy="705" r="11" fill="#facc15" stroke="#b45309" stroke-width="3" />
+        <rect x="155" y="758" width="270" height="44" rx="22" fill="#ffffff" stroke="#16a34a" stroke-width="3" />
+        <text x="290" y="786" class="station-label">🌱 Pea Plant &amp; Roots</text>
+        <text x="355" y="455" font-size="34" id="star-n-legume" opacity="0">⭐</text>
+      </g>
+
+      <!-- STATION N3: Soil Bacteria (Microbes gently wiggling) -->
+      <g class="hotspot" id="hs-n-bacteria" onclick="openStation('nitrogen', 'n-bacteria')">
+        <circle cx="755" cy="735" r="78" fill="none" stroke="#c7d2fe" stroke-width="5" class="hotspot-ring" />
+        <circle cx="755" cy="725" r="56" fill="#eef2ff" stroke="#4f46e5" stroke-width="6" />
+        <g class="microbe-wiggle">
+          <rect x="720" y="700" width="34" height="18" rx="9" fill="#6366f1" />
+          <circle cx="732" cy="708" r="2.5" fill="#fff" />
+          <circle cx="742" cy="708" r="2.5" fill="#fff" />
+          <circle cx="775" cy="718" r="15" fill="#10b981" />
+          <circle cx="770" cy="715" r="2.5" fill="#fff" />
+          <circle cx="780" cy="715" r="2.5" fill="#fff" />
+          <rect x="735" y="736" width="38" height="18" rx="9" fill="#f59e0b" />
+          <circle cx="748" cy="744" r="2.5" fill="#fff" />
+          <circle cx="760" cy="744" r="2.5" fill="#fff" />
+        </g>
+        <rect x="635" y="788" width="240" height="44" rx="22" fill="#ffffff" stroke="#4f46e5" stroke-width="3" />
+        <text x="755" y="816" class="station-label">🦠 Soil Bacteria</text>
+        <text x="815" y="685" font-size="32" id="star-n-bacteria" opacity="0">⭐</text>
+      </g>
+
+      <!-- STATION N4: Animals & Waste (continuously walking & nodding with clear horns!) -->
+      <g class="hotspot" id="hs-n-animal" onclick="openStation('nitrogen', 'n-animal')">
+        <circle cx="910" cy="545" r="82" fill="none" stroke="#ffffff" stroke-width="5" class="hotspot-ring" />
+        <g class="cow-walk">
+          <!-- Tail -->
+          <path d="M 962 532 Q 982 544 976 564" fill="none" stroke="#1e293b" stroke-width="4" stroke-linecap="round" />
+          <circle cx="976" cy="566" r="5" fill="#78350f" />
+          <!-- Body & Legs -->
+          <rect x="845" y="515" width="120" height="72" rx="28" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <ellipse cx="885" cy="542" rx="18" ry="13" fill="#78350f" />
+          <ellipse cx="932" cy="560" rx="15" ry="11" fill="#78350f" />
+          <rect x="858" y="580" width="14" height="42" rx="6" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <rect x="888" y="580" width="14" height="42" rx="6" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <rect x="925" y="580" width="14" height="42" rx="6" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <rect x="948" y="580" width="14" height="42" rx="6" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+          <!-- Head, Ears & Clearly Visible Horns -->
+          <g class="cow-head-nod">
+            <!-- Ears -->
+            <ellipse cx="794" cy="506" rx="12" ry="7" transform="rotate(-22 794 506)" fill="#ffffff" stroke="#1e293b" stroke-width="3.5" />
+            <ellipse cx="868" cy="506" rx="12" ry="7" transform="rotate(22 868 506)" fill="#ffffff" stroke="#1e293b" stroke-width="3.5" />
+            <!-- Head -->
+            <rect x="798" y="492" width="66" height="58" rx="20" fill="#ffffff" stroke="#1e293b" stroke-width="4" />
+            <!-- Horns (bold closed paths on top of head) -->
+            <path d="M 808 496 Q 790 478 805 464 Q 814 476 821 493 Z" fill="#fde68a" stroke="#1e293b" stroke-width="3.5" stroke-linejoin="round" />
+            <path d="M 854 496 Q 872 478 857 464 Q 848 476 841 493 Z" fill="#fde68a" stroke="#1e293b" stroke-width="3.5" stroke-linejoin="round" />
+            <!-- Snout & Eyes -->
+            <rect x="796" y="524" width="68" height="28" rx="14" fill="#fbcfe8" stroke="#1e293b" stroke-width="3" />
+            <circle cx="818" cy="538" r="3" fill="#be185d" />
+            <circle cx="842" cy="538" r="3" fill="#be185d" />
+            <circle cx="818" cy="512" r="5" fill="#1e293b" />
+            <circle cx="844" cy="512" r="5" fill="#1e293b" />
+          </g>
+        </g>
+        <rect x="790" y="625" width="244" height="44" rx="22" fill="#ffffff" stroke="#d97706" stroke-width="3" />
+        <text x="912" y="653" class="station-label">🐄 Animals &amp; Waste</text>
+        <text x="975" y="495" font-size="34" id="star-n-animal" opacity="0">⭐</text>
+      </g>
+
+      <!-- STATION N5: Farmer & Fertilizer (Moving Tractor with Spinning Wheels) -->
+      <g class="hotspot" id="hs-n-human" onclick="openStation('nitrogen', 'n-human')">
+        <circle cx="1265" cy="530" r="95" fill="none" stroke="#fde68a" stroke-width="5" class="hotspot-ring" />
+        <!-- Fertilizer Bag -->
+        <rect x="1158" y="545" width="54" height="64" rx="12" fill="#fde047" stroke="#b45309" stroke-width="4" />
+        <text x="1185" y="585" text-anchor="middle" font-size="22" font-weight="900" fill="#92400e">N+</text>
+        <!-- Moving Red Tractor -->
+        <g class="tractor-drive">
+          <rect x="1225" y="530" width="95" height="52" rx="12" fill="#ef4444" stroke="#1e293b" stroke-width="4" />
+          <rect x="1265" y="485" width="52" height="48" rx="8" fill="#bae6fd" stroke="#1e293b" stroke-width="4" />
+          <rect x="1258" y="475" width="66" height="12" rx="6" fill="#ef4444" stroke="#1e293b" stroke-width="3" />
+          <!-- Exhaust pipe & puff -->
+          <rect x="1235" y="505" width="8" height="26" rx="3" fill="#475569" stroke="#1e293b" stroke-width="2" />
+          <circle cx="1239" cy="496" r="7" fill="#e2e8f0" class="smoke-puff" />
+          <!-- Front Spinning Wheel -->
+          <g class="wheel-spin">
+            <circle cx="1245" cy="586" r="18" fill="#1e293b" />
+            <circle cx="1245" cy="586" r="8" fill="#facc15" />
+            <line x1="1245" y1="572" x2="1245" y2="600" stroke="#b45309" stroke-width="2.5" />
+            <line x1="1231" y1="586" x2="1259" y2="586" stroke="#b45309" stroke-width="2.5" />
+          </g>
+          <!-- Rear Spinning Wheel -->
+          <g class="wheel-spin">
+            <circle cx="1302" cy="582" r="28" fill="#1e293b" />
+            <circle cx="1302" cy="582" r="12" fill="#facc15" />
+            <line x1="1302" y1="560" x2="1302" y2="604" stroke="#b45309" stroke-width="3" />
+            <line x1="1280" y1="582" x2="1324" y2="582" stroke="#b45309" stroke-width="3" />
+          </g>
+        </g>
+        <rect x="1125" y="625" width="275" height="44" rx="22" fill="#ffffff" stroke="#ef4444" stroke-width="3" />
+        <text x="1262" y="653" class="station-label">🚜 Farmer &amp; Fertilizer</text>
+        <text x="1335" y="468" font-size="34" id="star-n-human" opacity="0">⭐</text>
+      </g>
+    </g>
+  </svg>
+
+  <!-- Bottom Hint -->
+  <div class="bottom-hint" id="bottom-hint">
+    👆 Tap any glowing picture to explore how the Carbon Cycle works and earn ⭐ stars!
+  </div>
+
+  <!-- Interactive Slide-by-Slide Modal -->
+  <div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-emoji" id="modal-emoji">🌳</span>
+          <h2 class="modal-title" id="modal-title">Green Plants</h2>
+        </div>
+        <div class="slide-dots" id="slide-dots"></div>
+        <button class="close-btn" onclick="closeModal()" aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="slide-graphic-box" id="slide-graphic"></div>
+        <div class="slide-text-box" id="slide-content"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="nav-btn btn-prev" id="btn-prev" onclick="changeSlide(-1)">⬅️ Back</button>
+        <span class="slide-counter" id="slide-counter">Slide 1 of 3</span>
+        <button class="nav-btn btn-next" id="btn-next" onclick="changeSlide(1)">Next ➡️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confetti Layer -->
+  <div id="confetti-layer"></div>
+</div>
+
+<script>
+// =========================================================================
+// 1. EDUCATIONAL CONTENT DATA (BALANCED A/B QUIZZES & NATURAL SPEECH)
+// =========================================================================
+const STATIONS = {
+  carbon: {
+    'c-air': {
+      emoji: '☁️',
+      title: 'Carbon in the Air (CO₂)',
+      slides: [
+        {
+          badge: 'Step 1 • Meet Carbon',
+          heading: 'An Invisible Blanket Around Earth',
+          text: 'Carbon floats in our sky as an invisible gas called Carbon Dioxide, or CO₂. Even though you cannot see it, it is all around us!',
+          graphic: 'co2-sky'
+        },
+        {
+          badge: 'Step 2 • Why It Matters',
+          heading: 'Just the Right Temperature!',
+          text: 'CO₂ acts like a cozy blanket that keeps Earth warm enough for plants, animals, and people to live. Plants also drink it in from the air!',
+          graphic: 'earth-blanket'
+        },
+        {
+          type: 'quiz',
+          badge: 'Quick Quiz! ⭐',
+          heading: 'What gas carries carbon in the air?',
+          questionAudio: 'Quick quiz! What gas carries carbon in the air? Choice A: Carbon Dioxide. Choice B: Helium gas, like in balloons.',
+          options: [
+            { label: 'Carbon Dioxide (CO₂)', correct: true },
+            { label: 'Helium gas (like in balloons)', correct: false }
+          ],
+          correctMsg: 'Awesome job! Carbon Dioxide is the gas that carries carbon in the air!',
+          wrongMsg: 'Nice try! Helium makes balloons float. Look closely at the cloud — it says CO₂!',
+          graphic: 'quiz-trophy'
+        }
+      ]
+    },
+    'c-tree': {
+      emoji: '🌳',
+      title: 'Green Plants (Photosynthesis)',
+      slides: [
+        {
+          badge: 'Step 1 • Plant Superpower',
+          heading: 'Plants Breathe In CO₂!',
+          text: 'Trees and green plants are nature’s air cleaners! They pull carbon dioxide gas right out of the sky through tiny holes in their leaves.',
+          graphic: 'photosynthesis'
+        },
+        {
+          badge: 'Step 2 • Making Food & Oxygen',
+          heading: 'Sunlight Turns CO₂ into Food!',
+          text: 'Using sunlight and water, plants turn CO₂ into sweet sugar food to help them grow big and strong — and they release fresh oxygen for us to breathe!',
+          graphic: 'leaf-factory'
+        },
+        {
+          type: 'quiz',
+          badge: 'Quick Quiz! ⭐',
+          heading: 'What do green plants take IN from the air to make food?',
+          questionAudio: 'Quick quiz! What do green plants take in from the air to make food? Choice A: Black smoke from cars. Choice B: Carbon Dioxide.',
+          options: [
+            { label: 'Black smoke from cars', correct: false },
+            { label: 'Carbon Dioxide (CO₂)', correct: true }
+          ],
+          correctMsg: 'You got it! Plants absorb carbon dioxide and use sunlight to make food through photosynthesis!',
+          wrongMsg: 'Not quite! Plants love sunlight, water, and carbon dioxide gas. Try Choice B!',
+          graphic: 'quiz-trophy'
+        }
+      ]
+    },
+    'c-cow': {
+      emoji: '🐄',
+      title: 'Animals (Eating & Breathing)',
+      slides: [
+        {
+          badge: 'Step 1 • Tasty Carbon',
+          heading: 'Carbon Moves Into Animals!',
+          text: 'When hungry animals like cows munch on grass and plants, the carbon stored inside the plants moves right into the animal’s body to give it energy!',
+          graphic: 'cow-eating'
+        },
+        {
+          badge: 'Step 2 • Breathing It Out',
+          heading: 'Take a Deep Breath Out!',
+          text: 'Every time animals — and humans like you! — breathe out, we release CO₂ gas back into the air. That process is called respiration!',
+          graphic: 'cow-breathing'
+        },
+        {
+          type: 'quiz',
+          badge: 'Quick Quiz! ⭐',
+          heading: 'How do animals return carbon back into the air?',
+          questionAudio: 'Quick quiz! How do animals return carbon back into the air? Choice A: By breathing out carbon dioxide. Choice B: By swimming in a pond.',
+          options: [
+            { label: 'By breathing out CO₂', correct: true },
+            { label: 'By swimming in a pond', correct: false }
+          ],
+          correctMsg: 'Super! Animals and people breathe out carbon dioxide every single second!',
+          wrongMsg: 'Oops! Think about what happens when you take a big breath out. Try the other answer!',
+          graphic: 'quiz-trophy'
+        }
+      ]
+    },
+    'c-decomposer': {
+      emoji: '🍄',
+      title: 'Decomposers (Nature’s Cleanup Crew)',
+      slides: [
+        {
+          badge: 'Step 1 • Nature’s Recyclers',
+          heading: 'Mushrooms, Worms & Bacteria!',
+          text: 'When leaves fall to the ground or plants and animals die, decomposers like mushrooms and worms get to work breaking them down!',
+          graphic: 'decomposers'
+        },
+        {
+          badge: 'Step 2 • Back to Soil & Sky',
+          heading: 'Nothing Goes to Waste!',
+          text: 'As decomposers munch on dead leaves, they return carbon to the rich soil and release CO₂ gas back up into the sky to keep the cycle spinning!',
+          graphic: 'soil-recycle'
+        },
+        {
+          type: 'quiz',
+          badge: 'Quick Quiz! ⭐',
+          heading: 'What is the special job of mushrooms and worms in the Carbon Cycle?',
+          questionAudio: 'Quick quiz! What is the special job of mushrooms and worms in the Carbon Cycle? Choice A: Making rain clouds in the sky. Choice B: Breaking down dead plants and returning carbon.',
+          options: [
+            { label: 'Making rain clouds in the sky', correct: false },
+            { label: 'Breaking down dead plants & returning carbon', correct: true }
+          ],
+          correctMsg: 'Brilliant! Decomposers are nature’s amazing cleanup and recycling team!',
+          wrongMsg: 'Not quite! Mushrooms and worms live on the ground and recycle dead leaves. Try again!',
+          graphic: 'quiz-trophy'
+        }
+      ]
+    },
+    'c-human': {
+      emoji: '🏭',
+      title: 'Human Activities (Burning Fuels)',
+      slides: [
+        {
+          badge: 'Step 1 • Factories & Cars',
+          heading: 'Burning Coal, Oil & Petrol',
+          text: 'Humans burn fossil fuels like coal, oil, and petrol to power factories, cars, and electricity. These fuels hold ancient carbon from millions of years ago!',
+          graphic: 'factory-smoke'
+        },
+        {
+          badge: 'Step 2 • Keep Earth Balanced',
+          heading: 'Too Much CO₂ Warms the Earth!',
+          text: 'Burning too much fuel puts extra CO₂ into the sky, making Earth’s blanket too thick. Planting trees and saving energy helps keep our planet cool!',
+          graphic: 'save-planet'
+        },
+        {
+          type: 'quiz',
+          badge: 'Quick Quiz! ⭐',
+          heading: 'Which choice helps REDUCE extra CO₂ in the air?',
+          questionAudio: 'Quick quiz! Which choice helps reduce extra carbon dioxide in the air? Choice A: Planting more trees and saving energy. Choice B: Burning more coal every day.',
+          options: [
+            { label: 'Planting more trees & saving energy', correct: true },
+            { label: 'Burning more coal every day', correct: false }
+          ],
+          correctMsg: 'Way to go, Earth Hero! Trees absorb carbon dioxide and saving energy lowers pollution!',
+          wrongMsg: 'Careful! Burning more coal adds even more carbon dioxide to the air. Try the greener choice!',
+          graphic: 'quiz-trophy'
+        }
+      ]
+    }
+  },
+
+  nitrogen: {
+    'n-air': {
+      emoji: '⚡',
+      title: 'Sky & Lightning (Nitrogen Gas)',
+      slides: [
+        {
+          badge: 'Step 1 • Lots of Nitrogen!',
+          heading: '78% of Our Air is Nitrogen!',
+          text: 'Almost 4 out of 5 breaths you take are Nitrogen gas, or N₂! But plants and animals cannot use it straight from the air — it is locked up tight!',
+          graphic: 'n2-sky'
+        },
+        {
+          badge: 'Step 2 • ZAP! Lightning Helps!',
+          heading: 'Lightning Unlocks Nitrogen!',
+          text: 'When a giant bolt of lightning flashes through the sky, its huge energy breaks N₂ apart so rain can carry usable nitrogen down into the soil!',
+          graphic: 'lightning-fix'
+        },
+        {
+          type: 'quiz',
+          badge: 'Quick Quiz! ⭐',
+          heading: 'Can plants use nitrogen gas (N₂) straight from the air by themselves?',
+          questionAudio: 'Quick quiz! Can plants use nitrogen gas straight from the air by themselves? Choice A: Yes, they drink nitrogen gas directly. Choice B: No, it must be changed into soil food first.',
+          options: [
+            { label: 'Yes, they drink N₂ gas directly', correct: false },
+            { label: 'No, it must be changed into soil food first', correct: true }
+          ],
+          correctMsg: 'Spot on! Nitrogen gas is locked up tight, so lightning or bacteria must unlock it first!',
+          wrongMsg: 'Good guess, but nitrogen gas is too tightly locked for plants! Try Choice B.',
+          graphic: 'quiz-trophy'
+        }
+      ]
+    },
+    'n-legume': {
+      emoji: '🌱',
+      title: 'Pea Plants & Root Helpers',
+      slides: [
+        {
+          badge: 'Step 1 • Secret Underground Team',
+          heading: 'Friendly Bacteria in the Roots!',
+          text: 'Peas, beans, and clover have tiny round bumps on their roots. Inside those bumps live super-helpful bacteria called Nitrogen-Fixing Bacteria!',
+          graphic: 'root-nodules'
+        },
+        {
+          badge: 'Step 2 • Best Friends Forever',
+          heading: 'Turning Air into Plant Food!',
+          text: 'The bacteria pull N₂ gas from air pockets in the soil and turn it into yummy nitrogen food for the plant. In return, the plant shares sweet sugar!',
+          graphic: 'plant-bacteria-team'
+        },
+        {
+          type: 'quiz',
+          badge: 'Quick Quiz! ⭐',
+          heading: 'Who lives on pea plant roots to turn nitrogen gas into plant food?',
+          questionAudio: 'Quick quiz! Who lives on pea plant roots to turn nitrogen gas into plant food? Choice A: Helpful nitrogen-fixing bacteria. Choice B: Tiny flying butterflies.',
+          options: [
+            { label: 'Helpful nitrogen-fixing bacteria', correct: true },
+            { label: 'Tiny flying butterflies', correct: false }
+          ],
+          correctMsg: 'Fantastic! Those friendly root bacteria are tiny superstars of the Nitrogen Cycle!',
+          wrongMsg: 'Butterflies love flowers, not underground roots! Try the other answer.',
+          graphic: 'quiz-trophy'
+        }
+      ]
+    },
+    'n-bacteria': {
+      emoji: '🦠',
+      title: 'Soil Bacteria (Tiny Chefs)',
+      slides: [
+        {
+          badge: 'Step 1 • Cooking Plant Food',
+          heading: 'Making Nitrates for Plants!',
+          text: 'Under a microscope, soil is full of busy bacteria! Some bacteria act like tiny chefs, turning soil ammonia into nitrates — the easiest nitrogen food for plant roots!',
+          graphic: 'bacteria-chefs'
+        },
+        {
+          badge: 'Step 2 • Completing the Loop',
+          heading: 'Sending Nitrogen Back to the Sky!',
+          text: 'Another team of soil bacteria changes leftover nitrates back into N₂ gas and sends it floating back up into the sky. The Nitrogen Cycle starts all over again!',
+          graphic: 'denitrification'
+        },
+        {
+          type: 'quiz',
+          badge: 'Quick Quiz! ⭐',
+          heading: 'Which tiny living things do MOST of the work in the Nitrogen Cycle?',
+          questionAudio: 'Quick quiz! Which tiny living things do most of the work in the Nitrogen Cycle? Choice A: Big elephants. Choice B: Soil bacteria.',
+          options: [
+            { label: 'Big elephants', correct: false },
+            { label: 'Soil bacteria', correct: true }
+          ],
+          correctMsg: 'Correct! Invisible soil bacteria are the true heroes driving the Nitrogen Cycle!',
+          wrongMsg: 'Haha, elephants are huge, not tiny! Look under the magnifying glass and try again.',
+          graphic: 'quiz-trophy'
+        }
+      ]
+    },
+    'n-animal': {
+      emoji: '🐄',
+      title: 'Animals & Waste (Building Muscles)',
+      slides: [
+        {
+          badge: 'Step 1 • Protein Power!',
+          heading: 'Nitrogen Builds Strong Bodies!',
+          text: 'Plants use nitrogen to make proteins. When cows, rabbits, and humans eat plants, we get nitrogen to build strong muscles, hair, and DNA!',
+          graphic: 'protein-power'
+        },
+        {
+          badge: 'Step 2 • Recycling Waste',
+          heading: 'Back Into the Soil!',
+          text: 'When animals produce waste or when living things die, decomposers break it down and return the nitrogen to the soil so new plants can grow!',
+          graphic: 'waste-recycle'
+        },
+        {
+          type: 'quiz',
+          badge: 'Quick Quiz! ⭐',
+          heading: 'How do animals get the nitrogen they need to grow strong muscles?',
+          questionAudio: 'Quick quiz! How do animals get the nitrogen they need to grow strong muscles? Choice A: By staring at lightning in the sky. Choice B: By eating plants or other animals.',
+          options: [
+            { label: 'By staring at lightning in the sky', correct: false },
+            { label: 'By eating plants (or other animals)', correct: true }
+          ],
+          correctMsg: 'Awesome! Eating healthy food gives animals and humans the nitrogen we need!',
+          wrongMsg: 'Don’t stare at lightning! Animals get nitrogen from the food they eat. Try Choice B!',
+          graphic: 'quiz-trophy'
+        }
+      ]
+    },
+    'n-human': {
+      emoji: '🚜',
+      title: 'Farmer & Fertilizer (Human Activity)',
+      slides: [
+        {
+          badge: 'Step 1 • Helping Crops Grow',
+          heading: 'Adding Nitrogen Fertilizer!',
+          text: 'Farmers often add special nitrogen fertilizer to their fields. This gives crops like rice, corn, and vegetables extra nutrients to grow big and feed people!',
+          graphic: 'farmer-fertilizer'
+        },
+        {
+          badge: 'Step 2 • Use Just Enough!',
+          heading: 'Protect Our Rivers and Ponds!',
+          text: 'If too much fertilizer is used, rain can wash it into rivers and ponds. That makes too much green algae grow, which is bad for fish — so farmers must use it carefully!',
+          graphic: 'clean-river'
+        },
+        {
+          type: 'quiz',
+          badge: 'Quick Quiz! ⭐',
+          heading: 'Why should farmers use ONLY the right amount of nitrogen fertilizer?',
+          questionAudio: 'Quick quiz! Why should farmers use only the right amount of nitrogen fertilizer? Choice A: So extra fertilizer does not wash into rivers and harm fish. Choice B: So tractors do not run out of red paint.',
+          options: [
+            { label: 'So extra fertilizer does not wash into rivers & harm fish', correct: true },
+            { label: 'So tractors do not run out of red paint', correct: false }
+          ],
+          correctMsg: 'Gold star! Using just the right amount grows healthy food and keeps rivers clean!',
+          wrongMsg: 'Tractors don’t need fertilizer for paint! Think about the fish in the river and try again.',
+          graphic: 'quiz-trophy'
+        }
+      ]
+    }
+  }
+};
+
+// =========================================================================
+// 2. OPTIMIZED SVG GRAPHICS (440x300 VIEWBOX — ZERO TEXT CLIPPING)
+// =========================================================================
+function getSlideGraphic(type) {
+  const svgs = {
+    'co2-sky': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#e0f2fe"/>
+        <circle cx="135" cy="100" r="40" fill="#bae6fd"/>
+        <circle cx="185" cy="88" r="50" fill="#ffffff"/>
+        <circle cx="245" cy="100" r="40" fill="#ffffff"/>
+        <text x="190" y="108" text-anchor="middle" font-size="38" font-weight="900" fill="#0284c7">CO₂</text>
+        <g style="animation: floatSlow 2.5s ease-in-out infinite;">
+          <circle cx="335" cy="188" r="32" fill="#38bdf8" opacity="0.25"/>
+          <text x="335" y="197" text-anchor="middle" font-size="24" font-weight="900" fill="#0369a1">CO₂</text>
+        </g>
+        <g style="animation: floatSlow 3.1s ease-in-out infinite;">
+          <circle cx="105" cy="205" r="28" fill="#38bdf8" opacity="0.25"/>
+          <text x="105" y="213" text-anchor="middle" font-size="21" font-weight="900" fill="#0369a1">CO₂</text>
+        </g>
+        <text x="220" y="274" text-anchor="middle" font-size="18" font-weight="800" fill="#0369a1">Invisible CO₂ Gas Floats All Around Us</text>
+      </svg>`,
+    'earth-blanket': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#0f172a"/>
+        <circle cx="220" cy="136" r="100" fill="none" stroke="#38bdf8" stroke-width="14" stroke-dasharray="18 10" opacity="0.7" class="flow-path"/>
+        <circle cx="220" cy="136" r="74" fill="#2563eb"/>
+        <path d="M 175 106 Q 205 92 230 116 Q 215 150 180 146 Z" fill="#22c55e"/>
+        <path d="M 235 140 Q 268 130 272 166 Q 245 190 225 166 Z" fill="#22c55e"/>
+        <text x="220" y="274" text-anchor="middle" font-size="18" font-weight="800" fill="#bae6fd">Cozy CO₂ Blanket Keeps Earth Warm!</text>
+      </svg>`,
+    'photosynthesis': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#f0fdf4"/>
+        <circle cx="75" cy="65" r="34" fill="#facc15"/>
+        <line x1="112" y1="90" x2="168" y2="128" stroke="#f59e0b" stroke-width="6" stroke-dasharray="8 6" class="flow-path"/>
+        <rect x="206" y="168" width="28" height="95" rx="6" fill="#92400e"/>
+        <circle cx="220" cy="132" r="58" fill="#22c55e"/>
+        <rect x="295" y="70" width="122" height="40" rx="20" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5"/>
+        <text x="356" y="96" text-anchor="middle" font-size="20" font-weight="900" fill="#0284c7">CO₂ IN ⬇️</text>
+        <rect x="295" y="170" width="122" height="40" rx="20" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+        <text x="356" y="196" text-anchor="middle" font-size="20" font-weight="900" fill="#16a34a">O₂ OUT ⬆️</text>
+      </svg>`,
+    'leaf-factory': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#ecfdf5"/>
+        <path d="M 115 178 Q 220 35 330 98 Q 280 215 115 178 Z" fill="#22c55e" stroke="#15803d" stroke-width="5"/>
+        <path d="M 115 178 Q 220 135 308 106" fill="none" stroke="#dcfce7" stroke-width="5"/>
+        <rect x="20" y="218" width="400" height="62" rx="14" fill="#ffffff" stroke="#a7f3d0" stroke-width="2.5"/>
+        <text x="220" y="245" text-anchor="middle" font-size="18" font-weight="900" fill="#065f46">☀️ Sunlight + 💧 Water + CO₂</text>
+        <text x="220" y="270" text-anchor="middle" font-size="18" font-weight="900" fill="#15803d">= 🍎 Sweet Sugar Food!</text>
+      </svg>`,
+    'cow-eating': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#fefce8"/>
+        <rect x="0" y="205" width="440" height="95" rx="0" fill="#4ade80"/>
+        <text x="235" y="168" text-anchor="middle" font-size="94">🐄</text>
+        <text x="125" y="226" text-anchor="middle" font-size="48">🌿</text>
+        <text x="220" y="48" text-anchor="middle" font-size="20" font-weight="900" fill="#15803d">Yum! Plant Carbon ➡️ Animal Energy!</text>
+      </svg>`,
+    'cow-breathing': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#fff7ed"/>
+        <text x="145" y="182" text-anchor="middle" font-size="94">🐄</text>
+        <g style="animation: floatSlow 2s ease-in-out infinite;">
+          <ellipse cx="305" cy="112" rx="68" ry="40" fill="#fed7aa" stroke="#ea580c" stroke-width="4"/>
+          <text x="305" y="122" text-anchor="middle" font-size="28" font-weight="900" fill="#9a3412">CO₂ 💨</text>
+        </g>
+        <text x="220" y="268" text-anchor="middle" font-size="18" font-weight="900" fill="#9a3412">Breathing Out Returns CO₂ to the Sky!</text>
+      </svg>`,
+    'decomposers': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#fef3c7"/>
+        <rect x="0" y="195" width="440" height="105" fill="#92400e"/>
+        <text x="145" y="185" text-anchor="middle" font-size="78">🍄</text>
+        <text x="295" y="188" text-anchor="middle" font-size="70">🍂</text>
+        <text x="220" y="255" text-anchor="middle" font-size="50">🪱</text>
+        <text x="220" y="52" text-anchor="middle" font-size="22" font-weight="900" fill="#78350f">Nature's Cleanup &amp; Recycling Team!</text>
+      </svg>`,
+    'soil-recycle': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#f0fdf4"/>
+        <rect x="0" y="185" width="440" height="115" fill="#78350f"/>
+        <text x="220" y="250" text-anchor="middle" font-size="24" font-weight="900" fill="#fde68a">Rich Soil Carbon</text>
+        <path d="M 220 175 L 220 82" stroke="#ea580c" stroke-width="10" stroke-dasharray="12 8" class="flow-path"/>
+        <text x="220" y="58" text-anchor="middle" font-size="26" font-weight="900" fill="#ea580c">CO₂ Back Up to Sky! ⬆️</text>
+      </svg>`,
+    'factory-smoke': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#f1f5f9"/>
+        <text x="155" y="200" text-anchor="middle" font-size="96">🏭</text>
+        <text x="305" y="210" text-anchor="middle" font-size="74">🚗</text>
+        <g style="animation: floatSlow 2.2s ease-in-out infinite;">
+          <text x="220" y="68" text-anchor="middle" font-size="26" font-weight="900" fill="#dc2626">💨 Lots of Extra CO₂! 💨</text>
+        </g>
+        <text x="220" y="274" text-anchor="middle" font-size="18" font-weight="800" fill="#475569">Burning Coal, Oil &amp; Petrol Releases CO₂</text>
+      </svg>`,
+    'save-planet': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#dcfce7"/>
+        <text x="115" y="162" text-anchor="middle" font-size="78">🌳</text>
+        <text x="220" y="162" text-anchor="middle" font-size="78">🚲</text>
+        <text x="325" y="162" text-anchor="middle" font-size="78">☀️</text>
+        <text x="220" y="254" text-anchor="middle" font-size="20" font-weight="900" fill="#166534">Plant Trees • Ride Bikes • Save Energy!</text>
+      </svg>`,
+    'n2-sky': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#eef2ff"/>
+        <circle cx="220" cy="128" r="80" fill="#6366f1"/>
+        <text x="220" y="125" text-anchor="middle" font-size="44" font-weight="900" fill="#ffffff">78%</text>
+        <text x="220" y="162" text-anchor="middle" font-size="26" font-weight="800" fill="#fde047">N₂ Gas</text>
+        <text x="220" y="264" text-anchor="middle" font-size="18" font-weight="900" fill="#312e81">Most of the Air Around Us is Nitrogen!</text>
+      </svg>`,
+    'lightning-fix': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#1e1b4b"/>
+        <text x="220" y="92" text-anchor="middle" font-size="66">🌩️</text>
+        <text x="220" y="182" text-anchor="middle" font-size="76" class="lightning-flash">⚡</text>
+        <rect x="0" y="220" width="440" height="80" fill="#78350f"/>
+        <text x="220" y="266" text-anchor="middle" font-size="20" font-weight="900" fill="#fde047">ZAP! N₂ Turns Into Plant Food!</text>
+      </svg>`,
+    'root-nodules': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#ecfdf5"/>
+        <rect x="0" y="148" width="440" height="152" fill="#78350f"/>
+        <text x="220" y="128" text-anchor="middle" font-size="84">🌱</text>
+        <path d="M 220 148 L 160 228 M 220 148 L 220 238 M 220 148 L 280 228" stroke="#fde68a" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="178" cy="204" r="14" fill="#facc15"/>
+        <circle cx="220" cy="218" r="15" fill="#facc15"/>
+        <circle cx="262" cy="204" r="14" fill="#facc15"/>
+        <text x="220" y="278" text-anchor="middle" font-size="18" font-weight="900" fill="#fef08a">Root Nodules Full of Friendly Bacteria!</text>
+      </svg>`,
+    'plant-bacteria-team': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#eef2ff"/>
+        <text x="115" y="160" text-anchor="middle" font-size="82">🌱</text>
+        <text x="220" y="155" text-anchor="middle" font-size="48">🤝</text>
+        <text x="325" y="160" text-anchor="middle" font-size="82">🦠</text>
+        <text x="220" y="256" text-anchor="middle" font-size="19" font-weight="900" fill="#312e81">Teamwork: Sugar for Nitrogen Food!</text>
+      </svg>`,
+    'bacteria-chefs': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#e0e7ff"/>
+        <circle cx="220" cy="132" r="76" fill="#ffffff" stroke="#4f46e5" stroke-width="8"/>
+        <text x="220" y="154" text-anchor="middle" font-size="76">🦠</text>
+        <text x="220" y="262" text-anchor="middle" font-size="19" font-weight="900" fill="#312e81">Soil Chefs Make Nitrates (NO₃⁻)!</text>
+      </svg>`,
+    'denitrification': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#eef2ff"/>
+        <rect x="0" y="192" width="440" height="108" fill="#78350f"/>
+        <text x="220" y="256" text-anchor="middle" font-size="44">🦠</text>
+        <path d="M 220 182 L 220 82" stroke="#4f46e5" stroke-width="10" stroke-dasharray="12 8" class="flow-path"/>
+        <text x="220" y="58" text-anchor="middle" font-size="26" font-weight="900" fill="#4f46e5">N₂ Gas Back to Sky! ⬆️</text>
+      </svg>`,
+    'protein-power': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#fefce8"/>
+        <text x="115" y="164" text-anchor="middle" font-size="76">🌿</text>
+        <text x="215" y="156" text-anchor="middle" font-size="42">➡️</text>
+        <text x="320" y="164" text-anchor="middle" font-size="82">🐄</text>
+        <text x="220" y="256" text-anchor="middle" font-size="18" font-weight="900" fill="#92400e">Nitrogen Builds Strong Muscles &amp; DNA! 💪</text>
+      </svg>`,
+    'waste-recycle': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#fef3c7"/>
+        <rect x="0" y="192" width="440" height="108" fill="#78350f"/>
+        <text x="145" y="168" text-anchor="middle" font-size="72">🐄</text>
+        <text x="295" y="172" text-anchor="middle" font-size="68">🍄</text>
+        <text x="220" y="256" text-anchor="middle" font-size="20" font-weight="900" fill="#fde68a">Waste Returns Nitrogen to Soil!</text>
+      </svg>`,
+    'farmer-fertilizer': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#f0fdf4"/>
+        <text x="145" y="168" text-anchor="middle" font-size="86">🚜</text>
+        <text x="295" y="168" text-anchor="middle" font-size="80">🌽</text>
+        <text x="220" y="256" text-anchor="middle" font-size="19" font-weight="900" fill="#166534">Nitrogen Fertilizer Helps Crops Grow!</text>
+      </svg>`,
+    'clean-river': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#e0f2fe"/>
+        <text x="145" y="164" text-anchor="middle" font-size="76">🐟</text>
+        <text x="295" y="164" text-anchor="middle" font-size="76">💧</text>
+        <text x="220" y="256" text-anchor="middle" font-size="18" font-weight="900" fill="#0369a1">Use Just Enough to Keep Rivers Clean!</text>
+      </svg>`,
+    'quiz-trophy': `
+      <svg viewBox="0 0 440 300" preserveAspectRatio="xMidYMid meet">
+        <rect width="440" height="300" rx="18" fill="#fefce8"/>
+        <g style="animation: floatSlow 2.2s ease-in-out infinite;">
+          <text x="220" y="168" text-anchor="middle" font-size="112">🏆</text>
+        </g>
+        <text x="220" y="256" text-anchor="middle" font-size="22" font-weight="900" fill="#b45309">Quiz Time! Earn Your Star! ⭐</text>
+      </svg>`
+  };
+  return svgs[type] || svgs['quiz-trophy'];
+}
+
+// =========================================================================
+// 3. APP STATE, NATURAL VOICE ENGINE & SOUND EFFECTS
+// =========================================================================
+let currentMode = 'carbon';
+let activeStation = null;
+let currentSlideIndex = 0;
+let audioEnabled = true;
+const completedStations = { carbon: new Set(), nitrogen: new Set() };
+
+// Natural Voice Selection Engine
+let availableVoices = [];
+let selectedVoiceURI = '';
+
+// Rank voices so Neural / Natural / Enhanced voices are automatically picked first
+function scoreVoice(voice) {
+  const name = (voice.name || '').toLowerCase();
+  const lang = (voice.lang || '').toLowerCase();
+  if (!lang.startsWith('en')) return -100;
+
+  let score = 0;
+  // Top tier: Microsoft Edge Online Natural (Neural) voices
+  if (name.includes('natural') || name.includes('neural')) score += 100;
+  if (name.includes('aria') || name.includes('jenny') || name.includes('ana') || name.includes('sonia') || name.includes('libby') || name.includes('guy')) score += 45;
+  // Second tier: Google Chrome & Apple Enhanced/Premium voices
+  if (name.includes('google us english') || name.includes('google uk english female')) score += 70;
+  if (name.includes('enhanced') || name.includes('premium') || name.includes('siri')) score += 65;
+  if (name.includes('samantha') || name.includes('ava') || name.includes('zoe') || name.includes('karen') || name.includes('tessa') || name.includes('moira')) score += 40;
+  // Prefer US/UK/AU standard accents
+  if (lang === 'en-us' || lang === 'en-gb') score += 15;
+  if (lang === 'en-au' || lang === 'en-ca') score += 10;
+  // Penalize robotic legacy voices
+  if (name.includes('david') || name.includes('zira') || name.includes('mark') || name.includes('espeak')) score -= 25;
+  return score;
+}
+
+function populateVoices() {
+  if (!('speechSynthesis' in window)) return;
+  const all = window.speechSynthesis.getVoices();
+  if (!all || !all.length) return;
+
+  availableVoices = all
+    .filter(v => (v.lang || '').toLowerCase().startsWith('en'))
+    .sort((a, b) => scoreVoice(b) - scoreVoice(a));
+
+  const select = document.getElementById('voice-select');
+  if (!select) return;
+
+  const prev = select.value;
+  select.innerHTML = '';
+
+  availableVoices.forEach(v => {
+    const opt = document.createElement('option');
+    opt.value = v.voiceURI;
+    const shortName = v.name
+      .replace('Microsoft ', '')
+      .replace(' Online (Natural)', ' ★')
+      .replace(' - English (United States)', ' (US)')
+      .replace(' - English (United Kingdom)', ' (UK)')
+      .replace(' - English (Australia)', ' (AU)');
+    opt.textContent = shortName;
+    select.appendChild(opt);
+  });
+
+  if (prev && availableVoices.some(v => v.voiceURI === prev)) {
+    select.value = prev;
+    selectedVoiceURI = prev;
+  } else if (availableVoices.length > 0) {
+    select.value = availableVoices[0].voiceURI;
+    selectedVoiceURI = availableVoices[0].voiceURI;
+  }
+}
+
+function onVoiceChange() {
+  const select = document.getElementById('voice-select');
+  selectedVoiceURI = select.value;
+  if (activeStation) {
+    replayCurrentAudio();
+  } else {
+    speakText("Hi! Let's explore nature's recycling adventure together!");
+  }
+}
+
+if ('speechSynthesis' in window) {
+  populateVoices();
+  window.speechSynthesis.onvoiceschanged = populateVoices;
+}
+
+// Clean up symbols/formulas so speech sounds natural and conversational
+function prepareNaturalSpeech(rawText) {
+  return rawText
+    .replace(/CO₂|CO2/g, 'carbon dioxide')
+    .replace(/N₂|N2/g, 'nitrogen gas')
+    .replace(/O₂|O2/g, 'oxygen')
+    .replace(/NO₃⁻/g, 'nitrates')
+    .replace(/—/g, ', ')
+    .replace(/•/g, ',')
+    .replace(/&/g, 'and')
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function speakText(text) {
+  if (!audioEnabled || !('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+
+  const clean = prepareNaturalSpeech(text);
+  const sentences = clean.match(/[^.!?]+[.!?]*/g) || [clean];
+  const voice = availableVoices.find(v => v.voiceURI === selectedVoiceURI) || availableVoices[0] || null;
+  const btn = document.getElementById('audio-replay-btn');
+
+  sentences.forEach((sentence, idx) => {
+    const trimmed = sentence.trim();
+    if (!trimmed) return;
+    const utter = new SpeechSynthesisUtterance(trimmed);
+    if (voice) utter.voice = voice;
+    utter.lang = voice ? voice.lang : 'en-US';
+    utter.rate = 0.96;
+    utter.pitch = 1.0;
+
+    if (idx === 0) {
+      utter.onstart = () => { if (btn) btn.classList.add('speaking'); };
+    }
+    if (idx === sentences.length - 1) {
+      utter.onend = () => { if (btn) btn.classList.remove('speaking'); };
+      utter.onerror = () => { if (btn) btn.classList.remove('speaking'); };
+    }
+    window.speechSynthesis.speak(utter);
+  });
+}
+
+function stopSpeech() {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  const btn = document.getElementById('audio-replay-btn');
+  if (btn) btn.classList.remove('speaking');
+}
+
+// Web Audio API subtle sound effects
+let audioCtx = null;
+function playTone(freq, duration = 0.14, type = 'sine', vol = 0.12) {
+  if (!audioEnabled) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch (e) {}
+}
+
+function playSuccessChime() {
+  playTone(523.25, 0.15, 'triangle', 0.16);
+  setTimeout(() => playTone(659.25, 0.15, 'triangle', 0.16), 110);
+  setTimeout(() => playTone(783.99, 0.28, 'triangle', 0.18), 220);
+}
+
+function playWrongBoop() {
+  playTone(220, 0.18, 'sawtooth', 0.08);
+  setTimeout(() => playTone(185, 0.22, 'sawtooth', 0.08), 120);
+}
+
+function toggleAudio() {
+  audioEnabled = !audioEnabled;
+  const btn = document.getElementById('btn-audio');
+  btn.textContent = audioEnabled ? '🔊' : '🔇';
+  btn.classList.toggle('muted', !audioEnabled);
+  if (!audioEnabled) stopSpeech();
+  else playTone(520, 0.1);
+}
+
+// =========================================================================
+// 4. MODE SWITCHING & PROGRESS
+// =========================================================================
+function setMode(mode) {
+  if (currentMode === mode) return;
+  currentMode = mode;
+  stopSpeech();
+  playTone(mode === 'carbon' ? 480 : 580, 0.14, 'triangle');
+
+  const stage = document.getElementById('tv-stage');
+  const carbonLayer = document.getElementById('carbon-layer');
+  const nitrogenLayer = document.getElementById('nitrogen-layer');
+  const btnCarbon = document.getElementById('btn-carbon');
+  const btnNitrogen = document.getElementById('btn-nitrogen');
+  const subtitle = document.getElementById('mode-subtitle');
+  const hint = document.getElementById('bottom-hint');
+
+  if (mode === 'carbon') {
+    stage.classList.remove('nitrogen-mode');
+    carbonLayer.classList.remove('hidden-layer');
+    nitrogenLayer.classList.add('hidden-layer');
+    btnCarbon.classList.add('active-carbon');
+    btnNitrogen.classList.remove('active-nitrogen');
+    subtitle.textContent = 'Carbon Cycle Explorer (CO₂)';
+    hint.textContent = '👆 Tap any glowing picture to explore the Carbon Cycle and earn ⭐ stars!';
+  } else {
+    stage.classList.add('nitrogen-mode');
+    carbonLayer.classList.add('hidden-layer');
+    nitrogenLayer.classList.remove('hidden-layer');
+    btnCarbon.classList.remove('active-carbon');
+    btnNitrogen.classList.add('active-nitrogen');
+    subtitle.textContent = 'Nitrogen Cycle Explorer (N₂)';
+    hint.textContent = '👆 Tap any glowing picture to explore the Nitrogen Cycle and earn ⭐ stars!';
+  }
+  updateProgressUI();
+}
+
+function updateProgressUI() {
+  const count = completedStations[currentMode].size;
+  const pill = document.getElementById('progress-pill');
+  pill.textContent = count === 5 ? '🏆 5 / 5 Master!' : `⭐ ${count} / 5 Stars`;
+}
+
+function resetProgress() {
+  completedStations.carbon.clear();
+  completedStations.nitrogen.clear();
+  document.querySelectorAll('[id^="star-"]').forEach(el => el.setAttribute('opacity', '0'));
+  updateProgressUI();
+  playTone(440, 0.12);
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+}
+
+// =========================================================================
+// 5. MODAL SLIDE-BY-SLIDE ENGINE
+// =========================================================================
+function openStation(mode, stationId) {
+  playTone(540, 0.12, 'triangle');
+  activeStation = { mode, id: stationId, data: STATIONS[mode][stationId] };
+  currentSlideIndex = 0;
+
+  document.getElementById('modal-emoji').textContent = activeStation.data.emoji;
+  document.getElementById('modal-title').textContent = activeStation.data.title;
+  document.getElementById('modal-overlay').classList.add('open');
+
+  renderSlide();
+}
+
+function closeModal() {
+  stopSpeech();
+  playTone(360, 0.1, 'sine');
+  document.getElementById('modal-overlay').classList.remove('open');
+  activeStation = null;
+}
+
+function handleOverlayClick(e) {
+  if (e.target.id === 'modal-overlay') closeModal();
+}
+
+function changeSlide(delta) {
+  if (!activeStation) return;
+  const total = activeStation.data.slides.length;
+  const next = currentSlideIndex + delta;
+  if (next < 0) return;
+  if (next >= total) {
+    closeModal();
+    return;
+  }
+  currentSlideIndex = next;
+  playTone(500 + next * 60, 0.1, 'triangle');
+  renderSlide();
+}
+
+function renderSlide() {
+  const slides = activeStation.data.slides;
+  const slide = slides[currentSlideIndex];
+  const total = slides.length;
+
+  const dotsEl = document.getElementById('slide-dots');
+  dotsEl.innerHTML = slides.map((_, idx) =>
+    `<span class="dot ${idx === currentSlideIndex ? 'active' : ''}"></span>`
+  ).join('');
+
+  document.getElementById('slide-graphic').innerHTML = getSlideGraphic(slide.graphic);
+
+  const contentEl = document.getElementById('slide-content');
+  if (slide.type === 'quiz') {
+    const letters = ['A', 'B'];
+    contentEl.innerHTML = `
+      <span class="slide-badge">${slide.badge}</span>
+      <h3 class="slide-heading">${slide.heading}</h3>
+      <div class="quiz-options">
+        ${slide.options.map((opt, i) => `
+          <button class="quiz-btn" id="quiz-opt-${i}" onclick="answerQuiz(${i})">
+            <span class="quiz-letter">${letters[i]}</span>
+            <span>${opt.label}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+      <button class="audio-replay-btn" id="audio-replay-btn" onclick="replayCurrentAudio()">
+        🔊 Hear Question Again
+      </button>
+    `;
+    speakText(slide.questionAudio);
+  } else {
+    contentEl.innerHTML = `
+      <span class="slide-badge">${slide.badge}</span>
+      <h3 class="slide-heading">${slide.heading}</h3>
+      <p class="slide-desc">${slide.text}</p>
+      <button class="audio-replay-btn" id="audio-replay-btn" onclick="replayCurrentAudio()">
+        🔊 Listen Again
+      </button>
+    `;
+    speakText(`${slide.heading}. ${slide.text}`);
+  }
+
+  document.getElementById('btn-prev').disabled = currentSlideIndex === 0;
+  const btnNext = document.getElementById('btn-next');
+  btnNext.textContent = currentSlideIndex === total - 1 ? 'Back to Map 🗺️' : 'Next ➡️';
+  document.getElementById('slide-counter').textContent = `Slide ${currentSlideIndex + 1} of ${total}`;
+}
+
+function replayCurrentAudio() {
+  if (!activeStation) return;
+  const slide = activeStation.data.slides[currentSlideIndex];
+  const script = slide.type === 'quiz' ? slide.questionAudio : `${slide.heading}. ${slide.text}`;
+  speakText(script);
+}
+
+function answerQuiz(optionIndex) {
+  const slide = activeStation.data.slides[currentSlideIndex];
+  const opt = slide.options[optionIndex];
+  const btn = document.getElementById(`quiz-opt-${optionIndex}`);
+  const feedback = document.getElementById('quiz-feedback');
+
+  if (opt.correct) {
+    btn.classList.add('correct');
+    document.querySelectorAll('.quiz-btn').forEach(b => b.disabled = true);
+    feedback.textContent = `🎉 ${slide.correctMsg}`;
+    feedback.className = 'quiz-feedback show-correct';
+    playSuccessChime();
+    launchConfetti();
+    speakText(slide.correctMsg);
+
+    completedStations[activeStation.mode].add(activeStation.id);
+    const starEl = document.getElementById(`star-${activeStation.id}`);
+    if (starEl) starEl.setAttribute('opacity', '1');
+    updateProgressUI();
+  } else {
+    btn.classList.remove('wrong');
+    void btn.offsetWidth;
+    btn.classList.add('wrong');
+    feedback.textContent = `💡 ${slide.wrongMsg}`;
+    feedback.className = 'quiz-feedback show-wrong';
+    playWrongBoop();
+    speakText(slide.wrongMsg);
+  }
+}
+
+function launchConfetti() {
+  const layer = document.getElementById('confetti-layer');
+  const colors = ['#facc15', '#10b981', '#38bdf8', '#f472b6', '#a855f7', '#fb923c'];
+  for (let i = 0; i < 36; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = `${15 + Math.random() * 70}%`;
+    piece.style.top = `${10 + Math.random() * 20}%`;
+    piece.style.background = colors[i % colors.length];
+    piece.style.animationDelay = `${Math.random() * 0.35}s`;
+    layer.appendChild(piece);
+    setTimeout(() => piece.remove(), 2200);
+  }
+}
+
+// Keyboard support (great for presenters using a wireless clicker!)
+document.addEventListener('keydown', (e) => {
+  if (!activeStation) return;
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'ArrowRight') changeSlide(1);
+  if (e.key === 'ArrowLeft') changeSlide(-1);
+});
+</script>
+</body>
+</html>
